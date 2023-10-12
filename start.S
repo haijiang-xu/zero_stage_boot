@@ -9,6 +9,9 @@ entry:
 	li      t0, 0x70013
 	csrw    0x7c2, t0
 
+	/*
+	 * Enable cache coherency
+	 */
 	li	t0, 1
 	csrw	msmpr,t0
 
@@ -42,10 +45,10 @@ entry:
 	/*
 	 * Set relocate done flag, let other harts boot.
 	 */
+	fence	rw, rw
 	li	t0, BOOT_STATUS_RELOCATE_DONE
 	lla	t1, _boot_status
 	sd	t0, 0(t1)
-	fence	rw, rw
 
 _relocate_copy_done:
 	/*
